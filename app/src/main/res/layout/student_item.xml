@@ -6,13 +6,13 @@
     android:padding="16dp">
 
     <TextView
+        android:id="@+id/tvStudentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
         android:id="@+id/tvStudentId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/tvStudentName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

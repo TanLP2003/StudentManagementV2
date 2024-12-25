@@ -54,7 +54,7 @@ class AddEditStudentActivity : AppCompatActivity() {
             return
         }
 
-        val newStudent = Student(id, name)
+        val newStudent = Student(name, id)
         val resultIntent = Intent()
         resultIntent.putExtra("student", newStudent)
         setResult(RESULT_OK, resultIntent)
@@ -70,7 +70,7 @@ class AddEditStudentActivity : AppCompatActivity() {
             return
         }
 
-        val editedStudent = Student(id, name)
+        val editedStudent = Student(name, id)
         val resultIntent = Intent()
         resultIntent.putExtra("student", editedStudent)
         resultIntent.putExtra("position", position)

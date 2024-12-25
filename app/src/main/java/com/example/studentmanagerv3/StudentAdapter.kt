@@ -1,6 +1,7 @@
 package com.example.studentmanagerv3
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ class StudentAdapter(
             .inflate(R.layout.student_item, parent, false)
 
         val student = students[position]
+        Log.i("student ${position}", "${student.name} ${student.id}")
         view.findViewById<TextView>(R.id.tvStudentId).text = student.id
         view.findViewById<TextView>(R.id.tvStudentName).text = student.name
 
