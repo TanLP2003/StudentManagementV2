@@ -6,8 +6,8 @@ import java.io.Serializable
 
 
 data class Student(
-    var id: String,
-    var name: String
+    var name: String,
+    var id: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
@@ -16,8 +16,8 @@ data class Student(
 
     // Ghi dữ liệu vào Parcel
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
         parcel.writeString(name)
+        parcel.writeString(id)
     }
 
     // Mô tả loại đặc biệt (luôn trả về 0)

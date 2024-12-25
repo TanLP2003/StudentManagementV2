@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var studentList: MutableList<Student>
     private lateinit var studentAdapter: StudentAdapter
     private lateinit var listView: ListView
+    private lateinit var dbHelper: DatabaseHelper
 
     private val addStudentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             val newStudent = result.data?.getParcelableExtra<Student>("student")
             newStudent?.let {
+                dbHelper.insertStudent(it)
                 studentList.add(it)
                 studentAdapter.notifyDataSetChanged()
             }
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
             editedStudent?.let { student ->
                 if (position != null && position != -1) {
+                    dbHelper.updateStudent(student)
                     studentList[position] = student
                     studentAdapter.notifyDataSetChanged()
                 }
@@ -60,29 +63,38 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        dbHelper = DatabaseHelper(this)
+        studentList = dbHelper.getAllStudents()
+        if (studentList.isEmpty()) {
+            val initialStudents = listOf(
+                Student("Nguyễn Văn An", "SV001"),
+                Student("Trần Thị Bảo", "SV002"),
+                Student("Lê Hoàng Cường", "SV003"),
+                Student("Phạm Thị Dung", "SV004"),
+                Student("Đỗ Minh Đức", "SV005"),
+                Student("Vũ Thị Hoa", "SV006"),
+                Student("Hoàng Văn Hải", "SV007"),
+                Student("Bùi Thị Hạnh", "SV008"),
+                Student("Đinh Văn Hùng", "SV009"),
+                Student("Nguyễn Thị Linh", "SV010"),
+                Student("Phạm Văn Long", "SV011"),
+                Student("Trần Thị Mai", "SV012"),
+                Student("Lê Thị Ngọc", "SV013"),
+                Student("Vũ Văn Nam", "SV014"),
+                Student("Hoàng Thị Phương", "SV015"),
+                Student("Đỗ Văn Quân", "SV016"),
+                Student("Nguyễn Thị Thu", "SV017"),
+                Student("Trần Văn Tài", "SV018"),
+                Student("Phạm Thị Tuyết", "SV019"),
+                Student("Lê Văn Vũ", "SV020")
+            )
 
-        studentList = mutableListOf(
-            Student("Nguyễn Văn An", "SV001"),
-            Student("Trần Thị Bảo", "SV002"),
-            Student("Lê Hoàng Cường", "SV003"),
-            Student("Phạm Thị Dung", "SV004"),
-            Student("Đỗ Minh Đức", "SV005"),
-            Student("Vũ Thị Hoa", "SV006"),
-            Student("Hoàng Văn Hải", "SV007"),
-            Student("Bùi Thị Hạnh", "SV008"),
-            Student("Đinh Văn Hùng", "SV009"),
-            Student("Nguyễn Thị Linh", "SV010"),
-            Student("Phạm Văn Long", "SV011"),
-            Student("Trần Thị Mai", "SV012"),
-            Student("Lê Thị Ngọc", "SV013"),
-            Student("Vũ Văn Nam", "SV014"),
-            Student("Hoàng Thị Phương", "SV015"),
-            Student("Đỗ Văn Quân", "SV016"),
-            Student("Nguyễn Thị Thu", "SV017"),
-            Student("Trần Văn Tài", "SV018"),
-            Student("Phạm Thị Tuyết", "SV019"),
-            Student("Lê Văn Vũ", "SV020")
-        )
+            initialStudents.forEach { student ->
+                dbHelper.insertStudent(student)
+            }
+
+            studentList = dbHelper.getAllStudents()
+        }
 
         studentAdapter = StudentAdapter(this, studentList)
         listView = findViewById(R.id.listViewStudents)
@@ -131,11 +143,17 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.menuRemove -> {
+                val student = studentList[position]
+                dbHelper.deleteStudent(student.id)
                 studentList.removeAt(position)
                 studentAdapter.notifyDataSetChanged()
                 true
             }
             else -> super.onContextItemSelected(item)
         }
+    }
+    override fun onDestroy() {
+        dbHelper.close()  // Close database connection
+        super.onDestroy()
     }
 }
